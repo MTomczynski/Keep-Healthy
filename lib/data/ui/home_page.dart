@@ -47,7 +47,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
   DateTime startTime = uninitializedDate;
   DateTime endTime = uninitializedDate;
 
-  final weekDaysSet = Set<int>();
+  var weekDaysSet = Set<int>();
 
   void manageWeekDaysState(bool boolValue, int weekDay) {
     if (boolValue) {
@@ -61,8 +61,13 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
   Widget build(BuildContext context) {
     final WorkHoursBloc workHoursBloc = BlocProvider.of(context);
 
-    Widget checkbox(String title, int day) {
-      final isActive = weekDaysSet.contains(day);
+    Widget checkbox(String title, int day, WorkHoursState state) {
+      var isActive;
+      if(state is WorkHoursLoaded) {
+        isActive = state.days.contains(day);
+      } else {
+        isActive = false;
+      }
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -70,9 +75,8 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
           Checkbox(
             value: isActive,
             onChanged: (bool value) {
-              setState(() {
-                manageWeekDaysState(value, day);
-              });
+              manageWeekDaysState(value, day);
+              workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime), weekDaysSet.toList()));
             },
           )
         ],
@@ -84,6 +88,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
       if (state is WorkHoursLoaded) {
         startTime = state.workHours.startTime;
         endTime = state.workHours.endTime;
+        weekDaysSet = state.days.toSet();
       }
       return Scaffold(
           appBar: AppBar(
@@ -144,18 +149,18 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      checkbox("Mon", 1),
-                      checkbox("Tu", 2),
-                      checkbox("Wed", 3),
-                      checkbox("Thur", 4),
-                      checkbox("Fri", 5),
+                      checkbox("Mon", 1, state),
+                      checkbox("Tu", 2, state),
+                      checkbox("Wed", 3, state),
+                      checkbox("Thur", 4, state),
+                      checkbox("Fri", 5, state),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      checkbox("Sat", 6),
-                      checkbox("Sun", 7),
+                      checkbox("Sat", 6, state),
+                      checkbox("Sun", 7, state),
                     ],
                   ),
                 ],
