@@ -18,6 +18,7 @@ dependencies:
   equatable: ^0.1.5
   shared_preferences: ^0.5.3+4
   intl: ^0.15.8
+  flutter_datetime_picker: ^1.2.5
 
 dev_dependencies:
   flutter_test:
