@@ -22,17 +22,17 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
       if (workHours.startTime == null || workHours.endTime == null) {
         yield WorkHoursUninitialized();
       } else {
-        yield WorkHoursLoaded(workHours);
+        yield WorkHoursLoaded(workHours, List());
       }
       return;
     } else if (event is SaveWorkHours) {
       await workHoursRepository.saveWorkHours(event.workHours);
       notificationManager.clearNotifications();
-      notificationManager.setupDailyNotifications(event.workHours, oneHourRestRule);
-      yield WorkHoursLoaded(event.workHours);
+      notificationManager.setupDailyNotifications(event.workHours, oneHourRestRule, event.days);
+      yield WorkHoursLoaded(event.workHours, event.days);
       return;
     } else if (event is ShowTempWorkHours) {
-      yield WorkHoursLoaded(event.workHours);
+      yield WorkHoursLoaded(event.workHours, event.days);
       return;
     }
   }

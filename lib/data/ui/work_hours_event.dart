@@ -13,19 +13,21 @@ class GetWorkHours extends WorkHoursEvent {
 
 class ShowTempWorkHours extends WorkHoursEvent {
   final WorkHours workHours;
+  final List<int> days;
 
-  ShowTempWorkHours(this.workHours);
+  ShowTempWorkHours(this.workHours, this.days);
 
   @override
   String toString() {
-    return 'temp ${workHours.startTime}, ${workHours.endTime}';
+    return 'temp ${workHours.startTime}, ${workHours.endTime}, $days';
   }
 }
 
 class SaveWorkHours extends WorkHoursEvent {
   final WorkHours workHours;
+  final List<int> days;
 
-  SaveWorkHours(this.workHours);
+  SaveWorkHours(this.workHours, this.days);
 
   @override
   String toString() {

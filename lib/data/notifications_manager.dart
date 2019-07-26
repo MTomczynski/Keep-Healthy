@@ -21,8 +21,8 @@ class NotificationManager {
     flutterLocalNotificationsPlugin.cancelAll();
   }
 
-  void setupDailyNotifications(
-      WorkHours workHours, NotificationRule notificationRule) async {
+  void setupDailyNotifications(WorkHours workHours,
+      NotificationRule notificationRule, List<int> days) async {
     List<Time> notificationTimes = List<Time>();
 
     var notificationTime = workHours.startTime
@@ -39,10 +39,12 @@ class NotificationManager {
 
     final platformSpecificRules =
         createPlatformChannelSpecifics(notificationRule);
-    for (int i = 0; i < notificationTimes.length; i++) {
-      final notificationTime = notificationTimes[i];
-      setupDailyNotification(
-          i, platformSpecificRules, notificationTime, notificationRule);
+
+    for (int i = 0; i < days.length; i++) {
+      for (int j = 0; j < notificationTimes.length; j++) {
+        final notificationTime = notificationTimes[j];
+        setupDailyNotification(j, platformSpecificRules, notificationTime, notificationRule, i);
+      }
     }
   }
 
@@ -50,11 +52,13 @@ class NotificationManager {
       int id,
       NotificationDetails platformChannelSpecifics,
       Time time,
-      NotificationRule notificationRule) async {
-    await flutterLocalNotificationsPlugin.showDailyAtTime(
+      NotificationRule notificationRule,
+      int day) async {
+    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
         id,
         notificationRule.notificationTitle,
         notificationRule.notificationMessage,
+        Day(day),
         time,
         platformChannelSpecifics);
   }
@@ -62,8 +66,11 @@ class NotificationManager {
   NotificationDetails createPlatformChannelSpecifics(
       NotificationRule notificationRule) {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        "0", notificationRule.ruleName, notificationRule.ruleName,
-        icon: "app_icon", largeIcon: "app_icon");
+        notificationRule.id.toString(),
+        notificationRule.ruleName,
+        notificationRule.ruleName,
+        icon: "app_icon",
+        largeIcon: "app_icon");
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);

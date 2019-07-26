@@ -73,7 +73,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                           DatePicker.showTimePicker(context,
                               onChanged: (date) {
                                 startTime = date;
-                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime)));
+                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime), List()));
                               });
                         },
                         child: Text(
@@ -96,7 +96,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                           DatePicker.showTimePicker(context,
                               onChanged: (date) {
                                 endTime = date;
-                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime)));
+                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime), List()));
                               });
                         },
                         child: Text(
@@ -114,7 +114,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                   onPressed: () {
                     if(startTime != uninitializedDate && endTime != uninitializedDate) {
                       workHoursBloc.dispatch(
-                          SaveWorkHours(WorkHours(startTime, endTime)));
+                          SaveWorkHours(WorkHours(startTime, endTime), List()));
                       Toast.show("Work hours saved!", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
                     }
                   },
