@@ -15,7 +15,7 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
   Stream<WorkHoursState> mapEventToState(WorkHoursEvent event) async* {
     if (event is GetWorkHours) {
       final workHours = await workHoursRepository.getWorkHours();
-      if(workHours.startTime == null || workHours.endTime == null) {
+      if (workHours.startTime == null || workHours.endTime == null) {
         yield WorkHoursUninitialized();
       } else {
         yield WorkHoursLoaded(workHours);
@@ -23,6 +23,9 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
       return;
     } else if (event is SaveWorkHours) {
       await workHoursRepository.saveWorkHours(event.workHours);
+      yield WorkHoursLoaded(event.workHours);
+      return;
+    } else if (event is ShowTempWorkHours) {
       yield WorkHoursLoaded(event.workHours);
       return;
     }
