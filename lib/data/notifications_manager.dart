@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'model/notification_rule.dart';
@@ -39,13 +40,12 @@ class NotificationManager {
 
     final platformSpecificRules =
         createPlatformChannelSpecifics(notificationRule);
-
-    for (int i = 0; i < days.length; i++) {
+    days.forEach((day) {
       for (int j = 0; j < notificationTimes.length; j++) {
         final notificationTime = notificationTimes[j];
-        setupDailyNotification(j, platformSpecificRules, notificationTime, notificationRule, i);
+        setupDailyNotification(j, platformSpecificRules, notificationTime, notificationRule, day);
       }
-    }
+    });
   }
 
   void setupDailyNotification(
