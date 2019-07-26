@@ -13,8 +13,19 @@ class WorkHoursRepository {
   Future<WorkHours> getWorkHours() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    DateTime startDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
-    DateTime endDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_END_TIME));
+    DateTime startDate;
+    if(prefs.containsKey(KEY_START_TIME)) {
+      startDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
+    } else {
+      startDate = null;
+    }
+
+    DateTime endDate;
+    if(prefs.containsKey(KEY_END_TIME)) {
+      endDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_END_TIME));
+    } else {
+      endDate = null;
+    }
 
     return WorkHours(startDate, endDate);
   }
