@@ -33,7 +33,7 @@ class WorkHoursRepository {
 
   Future<void> saveDays(List<int> days) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(KEY_DAYS, days.map((day) => day.toString()));
+    await prefs.setStringList(KEY_DAYS, days.map((day) => day.toString()).toList());
   }
 
   Future<List<int>> getDays() async {
