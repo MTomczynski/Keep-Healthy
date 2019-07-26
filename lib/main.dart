@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         home: BlocProvider(
           builder: (context) =>
               WorkHoursBloc(WorkHoursRepository())..dispatch(GetWorkHours()),
-          child: MyHomePage(
+          child: WorkHoursScreen(
             title: "Keep Healthy",
           ),
         ));
