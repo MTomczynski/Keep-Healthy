@@ -18,9 +18,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final uninitializedDate = DateTime.parse("2000-01-01 00:00:00Z");
 
-  void _formatDate(DateTime dateTime) {
-    String formattedDate = DateFormat('HH:mm').format(dateTime);
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('HH:mm').format(dateTime);
   }
+
+  _buildStartDate(WorkHoursState state) {
+    if(state is WorkHoursUninitialized) {
+      return Text(_formatDate(uninitializedDate));
+    } else if(state is WorkHoursLoaded) {
+      return Text(_formatDate(state.workHours.startTime));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text(widget.title),
           ),
           body: Center(
-            child: Text(state.toString()),
+            child: _buildStartDate(state),
           ),
         );
       });
