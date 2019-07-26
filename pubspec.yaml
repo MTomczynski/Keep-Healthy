@@ -11,9 +11,12 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
+
   bloc: ^0.14.0
   flutter_bloc: ^0.20.0
   flutter_local_notifications: ^0.8.0
+  equatable: ^0.1.5
+  shared_preferences: ^0.5.3+4
 
 dev_dependencies:
   flutter_test:
