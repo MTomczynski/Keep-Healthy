@@ -28,9 +28,7 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
     } else if (event is SaveWorkHours) {
       await workHoursRepository.saveWorkHours(event.workHours);
       notificationManager.clearNotifications();
-      NotificationRule rule =
-          NotificationRule(1, "Test rule", "Testing", "Just testing", 1);
-      notificationManager.setupDailyNotifications(event.workHours, rule);
+      notificationManager.setupDailyNotifications(event.workHours, oneHourRestRule);
       yield WorkHoursLoaded(event.workHours);
       return;
     } else if (event is ShowTempWorkHours) {
@@ -39,3 +37,5 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
     }
   }
 }
+
+final oneHourRestRule = NotificationRule("Rest", "Odejdź od biurka", "Zrób sobie 5 minutową przerwę. Zmień pozycję ciała oraz nie wykonuj czynności obciążających wzrok", 60);
