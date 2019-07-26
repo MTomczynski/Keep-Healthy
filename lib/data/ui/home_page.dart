@@ -7,6 +7,7 @@ import 'package:keep_healthy/data/model/work_hours.dart';
 import 'package:keep_healthy/data/ui/work_hours_bloc.dart';
 import 'package:keep_healthy/data/ui/work_hours_event.dart';
 import 'package:keep_healthy/data/ui/work_hours_state.dart';
+import 'package:toast/toast.dart';
 
 class WorkHoursScreen extends StatefulWidget {
   WorkHoursScreen({Key key, this.title}) : super(key: key);
@@ -17,8 +18,8 @@ class WorkHoursScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _WorkHoursScreenState();
 }
 
+final uninitializedDate = DateTime.parse("2000-01-01 00:00:00Z");
 class _WorkHoursScreenState extends State<WorkHoursScreen> {
-  final uninitializedDate = DateTime.parse("2000-01-01 00:00:00Z");
   final String format = "HH:mm";
 
   String _formatDate(DateTime dateTime) {
@@ -41,8 +42,8 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
     }
   }
 
-  DateTime startTime = DateTime.parse("2000-01-01 00:00:00Z");
-  DateTime endTime = DateTime.parse("2000-01-01 00:00:00Z");
+  DateTime startTime = uninitializedDate;
+  DateTime endTime = uninitializedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,11 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
     final WorkHoursBloc workHoursBloc = BlocProvider.of(context);
 
     return BlocBuilder<WorkHoursBloc, WorkHoursState>(
-        builder: (context, state) {
+        builder: (blockContext, state) {
+          if(state is WorkHoursLoaded) {
+            startTime = state.workHours.startTime;
+            endTime = state.workHours.endTime;
+          }
       return Scaffold(
           appBar: AppBar(
             title: Text(widget.title),
@@ -106,7 +111,11 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                 padding: EdgeInsets.all(40.0),
                 child: RaisedButton(
                   onPressed: () {
-
+                    if(startTime != uninitializedDate && endTime != uninitializedDate) {
+                      workHoursBloc.dispatch(
+                          SaveWorkHours(WorkHours(startTime, endTime)));
+                      Toast.show("Work hours saved!", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                    }
                   },
                   child: Center(
                     child: Text("Save"),
