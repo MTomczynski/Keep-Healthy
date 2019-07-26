@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:keep_healthy/data/model/work_hours.dart';
-import 'package:keep_healthy/data/ui/work_hours_bloc.dart';
 import 'package:keep_healthy/data/ui/work_hours_event.dart';
 import 'package:keep_healthy/data/ui/work_hours_state.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
+
+import 'work_hours_bloc.dart';
 
 class WorkHoursScreen extends StatefulWidget {
   WorkHoursScreen({Key key, this.title}) : super(key: key);

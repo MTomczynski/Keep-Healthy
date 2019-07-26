@@ -6,22 +6,23 @@ class WorkHoursRepository {
 
   Future<void> saveWorkHours(WorkHours workHours) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt(KEY_START_TIME, workHours.startTime.millisecondsSinceEpoch);
-    prefs.setInt(KEY_END_TIME, workHours.endTime.millisecondsSinceEpoch);
+    await prefs.setInt(KEY_START_TIME, workHours.startTime.millisecondsSinceEpoch);
+    await prefs.setInt(KEY_END_TIME, workHours.endTime.millisecondsSinceEpoch);
   }
 
   Future<WorkHours> getWorkHours() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     DateTime startDate;
-    if(prefs.containsKey(KEY_START_TIME)) {
-      startDate = DateTime.fromMillisecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
+    if (prefs.containsKey(KEY_START_TIME)) {
+      startDate =
+          DateTime.fromMillisecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
     } else {
       startDate = null;
     }
 
     DateTime endDate;
-    if(prefs.containsKey(KEY_END_TIME)) {
+    if (prefs.containsKey(KEY_END_TIME)) {
       endDate = DateTime.fromMillisecondsSinceEpoch(prefs.getInt(KEY_END_TIME));
     } else {
       endDate = null;

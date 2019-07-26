@@ -3,9 +3,20 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'model/notification_rule.dart';
 import 'model/work_hours.dart';
 
+
+initializeLocalNotificationsPlugin() {
+  final plugin = FlutterLocalNotificationsPlugin();
+  var initializationSettingsAndroid =
+  AndroidInitializationSettings('app_icon');
+  var initializationSettingsIOS = IOSInitializationSettings();
+  var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+  plugin.initialize(initializationSettings);
+  return plugin;
+}
+
 class NotificationManager {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      new FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = initializeLocalNotificationsPlugin();
 
   void clearNotifications() {
     flutterLocalNotificationsPlugin.cancelAll();
@@ -13,15 +24,15 @@ class NotificationManager {
 
   void setupDailyNotifications(
       WorkHours workHours, NotificationRule notificationRule) async {
-    List<Time> notificationTimes = new List<Time>();
+    List<Time> notificationTimes = List<Time>();
 
-    var notificationTime = workHours.startTime.add(new Duration(minutes: notificationRule.intervalMinutes));
+    var notificationTime = workHours.startTime.add(Duration(minutes: notificationRule.intervalMinutes));
 
     do {
       var tmp = Time(notificationTime.hour, notificationTime.minute, notificationTime.second);
 
       notificationTimes.add(tmp);
-      notificationTime = notificationTime.add(new Duration(minutes: notificationRule.intervalMinutes));
+      notificationTime = notificationTime.add(Duration(minutes: notificationRule.intervalMinutes));
 
     } while (notificationTime.isBefore(workHours.endTime));
 
@@ -43,11 +54,11 @@ class NotificationManager {
 
   NotificationDetails createPlatformChannelSpecifics(NotificationRule notificationRule){
     var androidPlatformChannelSpecifics =
-    new AndroidNotificationDetails(notificationRule.id.toString(),
+    AndroidNotificationDetails(notificationRule.id.toString(),
         notificationRule.ruleName, notificationRule.ruleName, icon: "app_icon", largeIcon: "app_icon");
     var iOSPlatformChannelSpecifics =
-    new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
+    IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     return platformChannelSpecifics;

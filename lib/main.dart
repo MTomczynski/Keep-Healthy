@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keep_healthy/data/repository/work_hours_repository.dart';
-import 'package:keep_healthy/data/ui/work_hours_bloc.dart';
-import 'package:keep_healthy/data/ui/work_hours_event.dart';
+import 'data/repository/work_hours_repository.dart';
 import 'data/ui/home_page.dart';
+import 'data/ui/work_hours_bloc.dart';
+import 'data/ui/work_hours_event.dart';
 
 void main() => runApp(MyApp());
 
