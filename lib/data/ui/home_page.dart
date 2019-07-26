@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:keep_healthy/data/model/work_hours.dart';
 import 'package:keep_healthy/data/ui/work_hours_event.dart';
 import 'package:keep_healthy/data/ui/work_hours_state.dart';
-import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 
 import 'work_hours_bloc.dart';
@@ -20,6 +20,7 @@ class WorkHoursScreen extends StatefulWidget {
 }
 
 final uninitializedDate = DateTime.parse("2000-01-01 00:00:00Z");
+
 class _WorkHoursScreenState extends State<WorkHoursScreen> {
   final String format = "HH:mm";
 
@@ -46,17 +47,44 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
   DateTime startTime = uninitializedDate;
   DateTime endTime = uninitializedDate;
 
+  final weekDaysSet = Set<int>();
+
+  void manageWeekDaysState(bool boolValue, int weekDay) {
+    if (boolValue) {
+      weekDaysSet.add(weekDay);
+    } else {
+      weekDaysSet.remove(weekDay);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final WorkHoursBloc workHoursBloc = BlocProvider.of(context);
+
+    Widget checkbox(String title, int day) {
+      final isActive = weekDaysSet.contains(day);
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(title),
+          Checkbox(
+            value: isActive,
+            onChanged: (bool value) {
+              setState(() {
+                manageWeekDaysState(value, day);
+              });
+            },
+          )
+        ],
+      );
+    }
 
     return BlocBuilder<WorkHoursBloc, WorkHoursState>(
         builder: (blockContext, state) {
-          if(state is WorkHoursLoaded) {
-            startTime = state.workHours.startTime;
-            endTime = state.workHours.endTime;
-          }
+      if (state is WorkHoursLoaded) {
+        startTime = state.workHours.startTime;
+        endTime = state.workHours.endTime;
+      }
       return Scaffold(
           appBar: AppBar(
             title: Text(widget.title),
@@ -70,11 +98,12 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                       Text("Start time: "),
                       GestureDetector(
                         onTap: () {
-                          DatePicker.showTimePicker(context,
-                              onChanged: (date) {
-                                startTime = date;
-                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime), List()));
-                              });
+                          DatePicker.showTimePicker(context, onChanged: (date) {
+                            startTime = date;
+                            workHoursBloc.dispatch(ShowTempWorkHours(
+                                WorkHours(startTime, endTime),
+                                weekDaysSet.toList()));
+                          });
                         },
                         child: Text(
                           _getStartDateText(state),
@@ -93,11 +122,12 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                       Text("End time: "),
                       GestureDetector(
                         onTap: () {
-                          DatePicker.showTimePicker(context,
-                              onChanged: (date) {
-                                endTime = date;
-                                workHoursBloc.dispatch(ShowTempWorkHours(WorkHours(startTime, endTime), List()));
-                              });
+                          DatePicker.showTimePicker(context, onChanged: (date) {
+                            endTime = date;
+                            workHoursBloc.dispatch(ShowTempWorkHours(
+                                WorkHours(startTime, endTime),
+                                weekDaysSet.toList()));
+                          });
                         },
                         child: Text(
                           _getEndDateText(state),
@@ -108,14 +138,38 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                       )
                     ],
                   )),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      checkbox("Mon", 1),
+                      checkbox("Tu", 2),
+                      checkbox("Wed", 3),
+                      checkbox("Thur", 4),
+                      checkbox("Fri", 5),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      checkbox("Sat", 6),
+                      checkbox("Sun", 7),
+                    ],
+                  ),
+                ],
+              ),
               Padding(
                 padding: EdgeInsets.all(40.0),
                 child: RaisedButton(
                   onPressed: () {
-                    if(startTime != uninitializedDate && endTime != uninitializedDate) {
-                      workHoursBloc.dispatch(
-                          SaveWorkHours(WorkHours(startTime, endTime), List()));
-                      Toast.show("Work hours saved!", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                    if (startTime != uninitializedDate &&
+                        endTime != uninitializedDate) {
+                      workHoursBloc.dispatch(SaveWorkHours(
+                          WorkHours(startTime, endTime), weekDaysSet.toList()));
+                      Toast.show("Work hours saved!", context,
+                          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                     }
                   },
                   child: Center(
@@ -124,8 +178,7 @@ class _WorkHoursScreenState extends State<WorkHoursScreen> {
                 ),
               )
             ],
-          )
-      );
+          ));
     });
   }
 }
