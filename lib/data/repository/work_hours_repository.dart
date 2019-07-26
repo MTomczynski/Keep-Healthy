@@ -15,14 +15,14 @@ class WorkHoursRepository {
 
     DateTime startDate;
     if(prefs.containsKey(KEY_START_TIME)) {
-      startDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
+      startDate = DateTime.fromMillisecondsSinceEpoch(prefs.getInt(KEY_START_TIME));
     } else {
       startDate = null;
     }
 
     DateTime endDate;
     if(prefs.containsKey(KEY_END_TIME)) {
-      endDate = DateTime.fromMicrosecondsSinceEpoch(prefs.getInt(KEY_END_TIME));
+      endDate = DateTime.fromMillisecondsSinceEpoch(prefs.getInt(KEY_END_TIME));
     } else {
       endDate = null;
     }
