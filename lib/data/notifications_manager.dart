@@ -66,7 +66,7 @@ class NotificationManager {
   NotificationDetails createPlatformChannelSpecifics(
       NotificationRule notificationRule) {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        notificationRule.id.toString(),
+        "0",
         notificationRule.ruleName,
         notificationRule.ruleName,
         icon: "app_icon",
