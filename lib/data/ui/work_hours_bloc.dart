@@ -19,14 +19,16 @@ class WorkHoursBloc extends Bloc<WorkHoursEvent, WorkHoursState> {
   Stream<WorkHoursState> mapEventToState(WorkHoursEvent event) async* {
     if (event is GetWorkHours) {
       final workHours = await workHoursRepository.getWorkHours();
+      final days = await workHoursRepository.getDays();
       if (workHours.startTime == null || workHours.endTime == null) {
         yield WorkHoursUninitialized();
       } else {
-        yield WorkHoursLoaded(workHours, List());
+        yield WorkHoursLoaded(workHours, days);
       }
       return;
     } else if (event is SaveWorkHours) {
       await workHoursRepository.saveWorkHours(event.workHours);
+      await workHoursRepository.saveDays(event.days);
       notificationManager.clearNotifications();
       notificationManager.setupDailyNotifications(event.workHours, oneHourRestRule, event.days);
       yield WorkHoursLoaded(event.workHours, event.days);

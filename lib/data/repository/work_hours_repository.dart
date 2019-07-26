@@ -31,6 +31,23 @@ class WorkHoursRepository {
     return WorkHours(startDate, endDate);
   }
 
+  Future<void> saveDays(List<int> days) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(KEY_DAYS, days.map((day) => day.toString()));
+  }
+
+  Future<List<int>> getDays() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.containsKey(KEY_DAYS)){
+      return prefs.getStringList(KEY_DAYS).map((day) => int.parse(day)).toList();
+    }else{
+      return List();
+    }
+  }
+
   final String KEY_START_TIME = "start_time";
   final String KEY_END_TIME = "end_time";
+  final String KEY_DAYS= "days";
+
+
 }
