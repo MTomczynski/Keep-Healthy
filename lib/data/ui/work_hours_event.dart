@@ -11,6 +11,17 @@ class GetWorkHours extends WorkHoursEvent {
   }
 }
 
+class ShowTempWorkHours extends WorkHoursEvent {
+  final WorkHours workHours;
+
+  ShowTempWorkHours(this.workHours);
+
+  @override
+  String toString() {
+    return 'temp ${workHours.startTime}, ${workHours.endTime}';
+  }
+}
+
 class SaveWorkHours extends WorkHoursEvent {
   final WorkHours workHours;
 
