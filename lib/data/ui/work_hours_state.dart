@@ -16,11 +16,12 @@ class WorkHoursUninitialized extends WorkHoursState {
 
 class WorkHoursLoaded extends WorkHoursState {
   WorkHours workHours;
+  List<int> days;
 
-  WorkHoursLoaded(this.workHours) : super([workHours]);
+  WorkHoursLoaded(this.workHours, this.days) : super([workHours, days]);
 
   @override
   String toString() {
-    return 'WorkHoursLoaded ${workHours.startTime}, ${workHours.endTime}';
+    return 'WorkHoursLoaded ${workHours.startTime}, ${workHours.endTime}, $days';
   }
 }
